@@ -19,7 +19,7 @@ const PATHS = {
 const PAGES_DIR = PATHS.src
 const PAGES = fs
 .readdirSync(PAGES_DIR)
-.filter(fileName => fileName.endsWith('.html'))
+.filter(fileName => fileName.endsWith('.pug'))
 
 module.exports = {
   externals: {
@@ -59,14 +59,8 @@ module.exports = {
         exclude: '/node_modules/'
       },
       {
-        // Vue
-        test: /\.vue$/,
-        loader: 'vue-loader',
-        options: {
-          loader: {
-            scss: 'vue-style-loader!css-loader!sass-loader'
-          }
-        }
+        test: /\.pug$/,
+        loader: 'pug-loader'
       },
       {
         // Fonts
@@ -123,7 +117,7 @@ module.exports = {
               sourceMap: true,
               config: { path: `./postcss.config.js` }
             }
-          }
+          },
         ]
       }
     ]
@@ -165,12 +159,9 @@ module.exports = {
       Best way to create pages:
       https://github.com/vedees/webpack-template/blob/master/README.md#third-method-best
     */
-    ...PAGES.map(
-      page =>
-        new HtmlWebpackPlugin({
-          template: `${PAGES_DIR}/${page}`,
-          filename: `./${page}`
-        })
-    )
+    ...PAGES.map(page => new HtmlWebpackPlugin({
+      template: `${PAGES_DIR}/${page}`,
+      filename: `./${page.replace(/\.pug/,'.html')}`
+    }))
   ]
 }
